@@ -26,23 +26,23 @@ from eth_utils import (
 # system wide info for all exchanges on uniswap
 # orderBy (optional, alphabetical, time, liquidity, volume)
 def v1_stats():
-	order_by = request.args.get("orderBy");
+	order_by = request.args.get("orderBy")
 
 	if (order_by is None):
 		return jsonify(error='missing parameter: orderBy'), 400
 
-	query = datastore.Client().query(kind='exchange');
+	query = datastore.Client().query(kind='exchange')
 
-	exchanges = [];
+	exchanges = []
 
-	query_iterator = query.fetch();
-	
+	query_iterator = query.fetch()
+
 	for entity in query_iterator:
 		if (entity == None):
-			continue;
+			continue
 
-		eth_liquidity = int(entity["cur_eth_total"]);
-		erc20_liquidity = int(entity["cur_tokens_total"]);
+		eth_liquidity = int(entity["cur_eth_total"])
+		erc20_liquidity = int(entity["cur_tokens_total"])
 
 		exchange = {
 			"symbol" : entity["symbol"],
@@ -55,15 +55,15 @@ def v1_stats():
 		}
 
 		if ("theme" in entity):
-			exchange["theme"] = entity["theme"];
+			exchange["theme"] = entity["theme"]
 
-		exchanges.append(exchange);
+		exchanges.append(exchange)
 
-	exchanges.sort(key=sort_by_liquidity);
+	exchanges.sort(key=sort_by_liquidity)
 
-	return json.dumps(exchanges);
+	return json.dumps(exchanges)
 
 def sort_by_liquidity(exchange):
-	eth_liquidity = int(exchange["ethLiquidity"]);
+	eth_liquidity = int(exchange["ethLiquidity"])
 
-	return -eth_liquidity;
+	return -eth_liquidity

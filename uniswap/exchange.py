@@ -24,12 +24,12 @@ from eth_utils import (
 
 # return exchange details
 def v1_get_exchange():
-    exchange_address = request.args.get("exchangeAddress");
+    exchange_address = request.args.get("exchangeAddress")
 
     if (exchange_address is None):
         return jsonify(error='missing parameter: exchangeAddress'), 400
 
-    exchange_info = load_exchange_info(datastore.Client(), exchange_address);
+    exchange_info = load_exchange_info(datastore.Client(), exchange_address)
 
     if (exchange_info == None):
         return jsonify(error='no exchange found for this address'), 404

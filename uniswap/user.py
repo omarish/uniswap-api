@@ -25,13 +25,13 @@ from eth_utils import (
 )
 
 # TODO refactor into shared utils
-PROVIDER_URL = "https://chainkit-1.dev.kyokan.io/eth";
+PROVIDER_URL = "https://chainkit-1.dev.kyokan.io/eth"
 web3 = web3.Web3(web3.Web3.HTTPProvider(PROVIDER_URL))
 
 # return curret exchange price
 def v1_get_user():
-    user_address = request.args.get("userAddress");
-    exchange_address = request.args.get("exchangeAddress");
+    user_address = request.args.get("userAddress")
+    exchange_address = request.args.get("exchangeAddress")
 
     if (user_address is None):
         return jsonify(error='missing parameter: userAddress'), 400
@@ -42,17 +42,17 @@ def v1_get_user():
     exchange_address = to_checksum_address(exchange_address)
 
     # query the exchange contract
-    EXCHANGE_ABI = open("static/exchangeABI.json", "r").read();    
-    exchange_contract = web3.eth.contract(address=exchange_address, abi=EXCHANGE_ABI);
+    EXCHANGE_ABI = open("static/exchangeABI.json", "r").read()
+    exchange_contract = web3.eth.contract(address=exchange_address, abi=EXCHANGE_ABI)
 
-    total_pool_tokens = exchange_contract.functions.totalSupply().call();
-    user_pool_tokens = exchange_contract.functions.balanceOf(user_address).call();
+    total_pool_tokens = exchange_contract.functions.totalSupply().call()
+    user_pool_tokens = exchange_contract.functions.balanceOf(user_address).call()
 
-    user_percent = 0;
+    user_percent = 0
 
     if (total_pool_tokens > 0):
-        user_percent = user_pool_tokens / total_pool_tokens;
-    
+        user_percent = user_pool_tokens / total_pool_tokens
+
     result = {
         "poolTokenSupply" : str(total_pool_tokens),
         "userNumPoolTokens" : str(user_pool_tokens),

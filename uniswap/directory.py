@@ -23,18 +23,18 @@ from eth_utils import (
     to_wei,
 )
 
-# return all exchanges with optional parameters 
+# return all exchanges with optional parameters
 # minLiquidity (optional), orderBy (optional, alphabetical, time, liquidity, volume)
 def v1_directory():
-	query = datastore.Client().query(kind='exchange');
+	query = datastore.Client().query(kind='exchange')
 
-	exchanges = [];
+	exchanges = []
 
-	query_iterator = query.fetch();
-	
+	query_iterator = query.fetch()
+
 	for entity in query_iterator:
 		if (entity == None):
-			continue;
+			continue
 
 		exchange = {
 			"symbol" : entity["symbol"],
@@ -45,8 +45,8 @@ def v1_directory():
 		}
 
 		if ("theme" in entity):
-			exchange["theme"] = entity["theme"];
+			exchange["theme"] = entity["theme"]
 
-		exchanges.append(exchange);
+		exchanges.append(exchange)
 
 	return jsonify(exchanges)

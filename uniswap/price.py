@@ -29,20 +29,20 @@ EXCHANGES_DATASET_ID = "exchanges_v1"
 
 # return curret exchange price
 def v1_price():
-    exchange_address = request.args.get("exchangeAddress");
+    exchange_address = request.args.get("exchangeAddress")
 
     if (exchange_address is None):
         return jsonify(error='missing parameter: exchangeAddress'), 400
 
-    exchange_info = load_exchange_info(datastore.Client(), exchange_address);
+    exchange_info = load_exchange_info(datastore.Client(), exchange_address)
 
     if (exchange_info == None):
         return jsonify(error='no exchange found for this address'), 404
-    
+
     result = {
         "symbol" : exchange_info["symbol"],
-        
+
         "price" : calculate_marginal_rate(int(exchange_info["cur_eth_total"]), int(exchange_info["cur_tokens_total"]))
     }
-        
+
     return jsonify(result)
