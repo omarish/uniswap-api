@@ -24,9 +24,9 @@ from eth_utils import (
     to_wei,
 )
 
-# TODO refactor into shared utils
-PROVIDER_URL = "https://chainkit-1.dev.kyokan.io/eth"
-web3 = web3.Web3(web3.Web3.HTTPProvider(PROVIDER_URL))
+import config
+
+web3 = web3.Web3(web3.Web3.HTTPProvider(config.PROVIDER_URL))
 
 # return curret exchange price
 def v1_get_user():

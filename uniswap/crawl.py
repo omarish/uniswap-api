@@ -33,19 +33,11 @@ from eth_utils import (
     to_wei,
 )
 
-# TODO move these to shared utils
-PROJECT_ID = "uniswap-analytics"
-PROVIDER_URL = "https://chainkit-1.dev.kyokan.io/eth"
+import config
 
-TASK_QUEUE_ID = "my-appengine-queue"
-
-BLOCKS_DATASET_ID = "blocks_v1"
-BLOCKS_TABLE_ID = "block_data"
-
-GENSIS_BLOCK_NUMBER = 6627917 # Uniswap creation https://etherscan.io/tx/0xc1b2646d0ad4a3a151ebdaaa7ef72e3ab1aa13aa49d0b7a3ca020f5ee7b1b010
 MAX_BLOCKS_TO_CRAWL = 10000 # estimating 12 seconds per block, 5 blocks per minute, 2000 minutes, ~33 hours worth of transactions
 
-web3 = web3.Web3(web3.Web3.HTTPProvider(PROVIDER_URL))
+web3 = web3.Web3(web3.Web3.HTTPProvider(config.PROVIDER_URL))
 
 # Schedules a cloud task to call the given endpoint in delay_in_seconds
 # TODO move this to shared utils
@@ -58,7 +50,7 @@ def scheduleTask(delay_in_seconds, endpoint):
     timestamp = timestamp_pb2.Timestamp()
     timestamp.FromDatetime(d)
 
-    parent = task_client.queue_path(PROJECT_ID, "us-east1", TASK_QUEUE_ID)
+    parent = task_client.queue_path(config.PROJECT_ID, "us-east1", config.TASK_QUEUE_ID)
 
     task = {
         'app_engine_http_request': {
@@ -116,7 +108,7 @@ def v1_crawl_exchange():
     # if the last updated block number hasn't been set, then initialize it to the uniswap genesis block number (so we don't )
     # try pulling from very first block which is slow
     if (last_updated_block_number == 0):
-        last_updated_block_number = GENSIS_BLOCK_NUMBER
+        last_updated_block_number = config.GENSIS_BLOCK_NUMBER
 
     bq_dataset_id = "exchanges_v1"
 
@@ -229,7 +221,7 @@ def v1_crawl_exchange():
             if (log_block_num > latest_block_data_to_load):
                 latest_block_data_to_load = log_block_num
 
-        block_table_name = "`" + PROJECT_ID + "." + BLOCKS_DATASET_ID + "." + BLOCKS_TABLE_ID + "`"
+        block_table_name = "`" + config.PROJECT_ID + "." + config.BLOCKS_DATASET_ID + "." + config.BLOCKS_TABLE_ID + "`"
 
         # query all the blocks and their associated timestamps
         block_query = bq_client.query("""

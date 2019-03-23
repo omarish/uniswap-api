@@ -42,17 +42,11 @@ from uniswap.stats import v1_stats
 from uniswap.user import v1_get_user
 from uniswap.charts import v1_chart
 from uniswap.crawl import v1_crawl_exchange
+import config
 
-PROJECT_ID = "uniswap-analytics"
-TASK_QUEUE_ID = "my-appengine-queue"
-PROVIDER_URL = "https://chainkit-1.dev.kyokan.io/eth"
 
-BLOCKS_DATASET_ID = "blocks_v1"
-BLOCKS_TABLE_ID = "block_data"
 
-GENSIS_BLOCK_NUMBER = 6627917 # Uniswap creation https://etherscan.io/tx/0xc1b2646d0ad4a3a151ebdaaa7ef72e3ab1aa13aa49d0b7a3ca020f5ee7b1b010
-
-web3 = web3.Web3(web3.Web3.HTTPProvider(PROVIDER_URL))
+web3 = web3.Web3(web3.Web3.HTTPProvider(config.PROVIDER_URL))
 
 app = Flask(__name__)
 CORS(app)
@@ -104,7 +98,7 @@ def fetch_blocks():
 
 	# we haven't fetched any, so start at the genesis uniswap block
 	if (last_fetched_block == 0):
-		last_fetched_block = GENSIS_BLOCK_NUMBER
+		last_fetched_block = config.GENSIS_BLOCK_NUMBER
 
 	# this will hold the rows that we'll insert into bigquery
 	rows_to_insert = []
@@ -215,7 +209,7 @@ def scheduleTask(delay_in_seconds, endpoint):
 	timestamp = timestamp_pb2.Timestamp()
 	timestamp.FromDatetime(d)
 
-	parent = task_client.queue_path(PROJECT_ID, "us-east1", TASK_QUEUE_ID)
+	parent = task_client.queue_path(config.PROJECT_ID, "us-east1", config.TASK_QUEUE_ID)
 
 	task = {
 		'app_engine_http_request': {
@@ -230,10 +224,10 @@ def scheduleTask(delay_in_seconds, endpoint):
 # Returns table for the blocks_info (block -> timestamp mapping)
 def get_block_info_table(bq_client):
 	# get the block info dataset reference
-	block_dataset_ref = bq_client.dataset(BLOCKS_DATASET_ID)
+	block_dataset_ref = bq_client.dataset(config.BLOCKS_DATASET_ID)
 
 	# get the block info table reference
-	block_table_ref = block_dataset_ref.table(BLOCKS_TABLE_ID)
+	block_table_ref = block_dataset_ref.table(config.BLOCKS_TABLE_ID)
 
 	return bq_client.get_table(block_table_ref)
 

@@ -16,11 +16,6 @@ from eth_utils import (
     to_wei,
 )
 
-# TODO refactor this into a single location
-PROJECT_ID = "uniswap-analytics"
-
-EXCHANGES_DATASET_ID = "exchanges_v1"
-
 # return all the transactions for an exchange between startTime and endTime (inclusive)
 # or given an endTime (inclusive) and count (for paging)
 def v1_get_history():
@@ -39,7 +34,7 @@ def v1_get_history():
 
 	exchange_table_id = "exchange_history_" + exchange_address
 
-	exchange_table_name = "`" + PROJECT_ID + "." + EXCHANGES_DATASET_ID + "." + exchange_table_id + "`"
+	exchange_table_name = "`" + config.PROJECT_ID + "." + config.EXCHANGES_DATASET_ID + "." + exchange_table_id + "`"
 
 	# if no count provided, then check for start time
 	if (history_count is None):

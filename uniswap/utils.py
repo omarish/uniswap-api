@@ -13,8 +13,8 @@ from eth_utils import (
     to_wei,
 )
 
-BLOCKS_DATASET_ID = "blocks_v1"
-BLOCKS_TABLE_ID = "block_data"
+import config
+
 
 def load_exchange_cache(ds_client, exchange_address):
     exchange_address = to_checksum_address(exchange_address)
@@ -69,9 +69,9 @@ def calculate_rate(eth_liquidity, tokens_liquidity, provider_fee):
 # Returns table for the blocks_info (block -> timestamp mapping)
 def get_block_info_table(bq_client):
     # get the block info dataset reference
-    block_dataset_ref = bq_client.dataset(BLOCKS_DATASET_ID)
+    block_dataset_ref = bq_client.dataset(config.BLOCKS_DATASET_ID)
 
     # get the block info table reference
-    block_table_ref = block_dataset_ref.table(BLOCKS_TABLE_ID)
+    block_table_ref = block_dataset_ref.table(config.BLOCKS_TABLE_ID)
 
     return bq_client.get_table(block_table_ref)

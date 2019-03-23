@@ -23,11 +23,7 @@ from eth_utils import (
     to_wei,
 )
 
-# TODO refactor this into a single location
-PROJECT_ID = "uniswap-analytics"
-
-EXCHANGES_DATASET_ID = "exchanges_v1"
-BLOCKS_DATASET_ID = "blocks_v1"
+import config
 
 # return curret exchange price
 def v1_chart():
@@ -48,8 +44,8 @@ def v1_chart():
     # query ETH and token balances, taking Purchase and Liquidity events
     bq_client = bigquery.Client()
 
-    exchange_table_id = "exchange_history_" + exchange_address
-    exchange_table_name = "`" + PROJECT_ID + "." + EXCHANGES_DATASET_ID + "." + exchange_table_id + "`"
+    exchange_table_id = f"exchange_history_{exchange_address}"
+    exchange_table_name = f"`{config.PROJECT_ID}.{config.EXCHANGES_DATASET_ID}.{exchange_table_id}`"
 
     bq_query_sql = """
     	SELECT cast(sum(cast(eth as numeric)) as string) as eth_amount, cast(sum(cast(tokens as numeric)) as string) as token_amount, """ + unit_type + """ as date

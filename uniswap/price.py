@@ -22,10 +22,7 @@ from eth_utils import (
     to_wei,
 )
 
-# TODO refactor this into a single location
-PROJECT_ID = "uniswap-analytics"
 
-EXCHANGES_DATASET_ID = "exchanges_v1"
 
 # return curret exchange price
 def v1_price():

@@ -25,10 +25,7 @@ from eth_utils import (
     to_wei,
 )
 
-# TODO refactor this into a single location
-PROJECT_ID = "uniswap-analytics"
-
-EXCHANGES_DATASET_ID = "exchanges_v1"
+import config
 
 TICKER_NUM_HOURS = 24
 
@@ -104,7 +101,7 @@ def v1_ticker():
 
 		exchange_table_id = "exchange_history_" + to_checksum_address(exchange_address)
 
-		exchange_table_name = "`" + PROJECT_ID + "." + EXCHANGES_DATASET_ID + "." + exchange_table_id + "`"
+		exchange_table_name = "`" + config.PROJECT_ID + "." + config.EXCHANGES_DATASET_ID + "." + exchange_table_id + "`"
 
 		bq_query_sql = """
 	         SELECT
